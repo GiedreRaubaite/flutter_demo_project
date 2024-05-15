@@ -1,58 +1,45 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_project/state/router/route_names.dart';
 import 'package:flutter_demo_project/view/_view.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
-// final GlobalKey<NavigatorState> _shellNavigatorKey =
-//     GlobalKey<NavigatorState>();
+part 'router_provider.g.dart';
 
-// final RouteObserver<ModalRoute<void>> rootRouteObserver =
-//     RouteObserver<ModalRoute<void>>();
-// final RouteObserver<ModalRoute<void>> shellRouteObserver =
-//     RouteObserver<ModalRoute<void>>();
+@riverpod
+GoRouter router(RouterRef ref) {
+  final GlobalKey<NavigatorState> rootNavigatorKey =
+      GlobalKey<NavigatorState>();
 
-final routerProvider = Provider<GoRouter>(name: 'Router Provider', (ref) {
-  final router = RouterNotifier(ref);
-  return GoRouter(
-    navigatorKey: _rootNavigatorKey,
-    initialLocation: RouteName.startRoute,
-    debugLogDiagnostics: kDebugMode,
-    refreshListenable: router,
-    routes: router._routes,
-  );
-});
+  List<RouteBase> routes = [
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: Routes.homeRouteName,
+      path: Routes.homeRoute,
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: Routes.postDetailsRouteName,
+      path: Routes.postDetailsRoute,
+      builder: (context, state) =>
+          PostDetailScreen(post: state.extra as PostVM),
+    ),
+  ];
 
-class RouterNotifier extends ChangeNotifier {
-  RouterNotifier(this._ref);
-  final Ref _ref;
+  final router = GoRouter(
+      navigatorKey: rootNavigatorKey,
+      initialLocation: Routes.homeRoute,
+      debugLogDiagnostics: kDebugMode,
+      routes: routes,
+      errorBuilder: _errorRoute);
 
-  List<RouteBase> get _routes => [
-        GoRoute(
-          parentNavigatorKey: _rootNavigatorKey,
-          name: RouteName.startRouteName,
-          path: RouteName.startRoute,
-          builder: (context, state) => const HomeScreen(),
-        ),
-      ];
+  return router;
+}
 
-  Widget _errorRoute(BuildContext context, GoRouterState state) {
-    if (state.extra == null || state.extra is! String) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Error'),
-          iconTheme: const IconThemeData(),
-        ),
-        body: Center(
-          child: Text(
-            'Wrong arguments for route ${state.name}',
-          ),
-        ),
-      );
-    }
+Widget _errorRoute(BuildContext context, GoRouterState state) {
+  if (state.extra == null || state.extra is! String) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Error'),
@@ -60,9 +47,20 @@ class RouterNotifier extends ChangeNotifier {
       ),
       body: Center(
         child: Text(
-          state.extra! as String,
+          'Wrong arguments for route ${state.name}',
         ),
       ),
     );
   }
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Error'),
+      iconTheme: const IconThemeData(),
+    ),
+    body: Center(
+      child: Text(
+        state.extra! as String,
+      ),
+    ),
+  );
 }

@@ -1,3 +1,5 @@
 {
-  "hello": "Hello"
+  "allThePosts": "All the posts",
+  "comments": "Comments",
+  "editPost": "Edit post"
 }

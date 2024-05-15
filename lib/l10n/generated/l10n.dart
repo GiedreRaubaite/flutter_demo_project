@@ -50,11 +50,31 @@ class L10n {
     return Localizations.of<L10n>(context, L10n);
   }
 
-  /// `Hello`
-  String get hello {
+  /// `All the posts`
+  String get allThePosts {
     return Intl.message(
-      'Hello',
-      name: 'hello',
+      'All the posts',
+      name: 'allThePosts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Comments`
+  String get comments {
+    return Intl.message(
+      'Comments',
+      name: 'comments',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit post`
+  String get editPost {
+    return Intl.message(
+      'Edit post',
+      name: 'editPost',
       desc: '',
       args: [],
     );
@@ -67,6 +87,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'nl'),
     ];
   }
 
