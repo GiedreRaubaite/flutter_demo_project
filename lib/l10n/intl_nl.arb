@@ -1,5 +1,8 @@
 {
   "allThePosts": "Alle posts",
   "comments": "Commentaren",
-  "editPost": "Post bewerken"
+  "editPost": "Post bewerken",
+  "postDeletedSuccessfully": "Post succesvol verwijderd",
+  "goBack": "Terug",
+  "save": "Opslaan"
 }

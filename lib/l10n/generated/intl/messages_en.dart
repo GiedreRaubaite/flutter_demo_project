@@ -24,6 +24,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "allThePosts": MessageLookupByLibrary.simpleMessage("All the posts"),
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
-        "editPost": MessageLookupByLibrary.simpleMessage("Edit post")
+        "editPost": MessageLookupByLibrary.simpleMessage("Edit post"),
+        "goBack": MessageLookupByLibrary.simpleMessage("Back"),
+        "postDeletedSuccessfully":
+            MessageLookupByLibrary.simpleMessage("Post deleted Successfully"),
+        "save": MessageLookupByLibrary.simpleMessage("Save")
       };
 }

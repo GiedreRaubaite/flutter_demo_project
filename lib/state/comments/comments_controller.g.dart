@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'post_details_controller.dart';
+part of 'comments_controller.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$postDetailsControllerHash() =>
-    r'8013766063ffc2aede9b6ee29859122323c3c7e0';
+String _$commentsControllerHash() =>
+    r'e9619a1272bc1673bc41fa319d3e0ecfe07ce620';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -30,36 +30,36 @@ class _SystemHash {
   }
 }
 
-abstract class _$PostDetailsController
-    extends BuildlessAutoDisposeAsyncNotifier<PostVM> {
-  late final int id;
+abstract class _$CommentsController
+    extends BuildlessAutoDisposeAsyncNotifier<List<CommentVM>> {
+  late final int? id;
 
-  FutureOr<PostVM> build(
-    int id,
+  FutureOr<List<CommentVM>> build(
+    int? id,
   );
 }
 
-/// See also [PostDetailsController].
-@ProviderFor(PostDetailsController)
-const postDetailsControllerProvider = PostDetailsControllerFamily();
+/// See also [CommentsController].
+@ProviderFor(CommentsController)
+const commentsControllerProvider = CommentsControllerFamily();
 
-/// See also [PostDetailsController].
-class PostDetailsControllerFamily extends Family<AsyncValue<PostVM>> {
-  /// See also [PostDetailsController].
-  const PostDetailsControllerFamily();
+/// See also [CommentsController].
+class CommentsControllerFamily extends Family<AsyncValue<List<CommentVM>>> {
+  /// See also [CommentsController].
+  const CommentsControllerFamily();
 
-  /// See also [PostDetailsController].
-  PostDetailsControllerProvider call(
-    int id,
+  /// See also [CommentsController].
+  CommentsControllerProvider call(
+    int? id,
   ) {
-    return PostDetailsControllerProvider(
+    return CommentsControllerProvider(
       id,
     );
   }
 
   @override
-  PostDetailsControllerProvider getProviderOverride(
-    covariant PostDetailsControllerProvider provider,
+  CommentsControllerProvider getProviderOverride(
+    covariant CommentsControllerProvider provider,
   ) {
     return call(
       provider.id,
@@ -78,31 +78,30 @@ class PostDetailsControllerFamily extends Family<AsyncValue<PostVM>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'postDetailsControllerProvider';
+  String? get name => r'commentsControllerProvider';
 }
 
-/// See also [PostDetailsController].
-class PostDetailsControllerProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<PostDetailsController,
-        PostVM> {
-  /// See also [PostDetailsController].
-  PostDetailsControllerProvider(
-    int id,
+/// See also [CommentsController].
+class CommentsControllerProvider extends AutoDisposeAsyncNotifierProviderImpl<
+    CommentsController, List<CommentVM>> {
+  /// See also [CommentsController].
+  CommentsControllerProvider(
+    int? id,
   ) : this._internal(
-          () => PostDetailsController()..id = id,
-          from: postDetailsControllerProvider,
-          name: r'postDetailsControllerProvider',
+          () => CommentsController()..id = id,
+          from: commentsControllerProvider,
+          name: r'commentsControllerProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$postDetailsControllerHash,
-          dependencies: PostDetailsControllerFamily._dependencies,
+                  : _$commentsControllerHash,
+          dependencies: CommentsControllerFamily._dependencies,
           allTransitiveDependencies:
-              PostDetailsControllerFamily._allTransitiveDependencies,
+              CommentsControllerFamily._allTransitiveDependencies,
           id: id,
         );
 
-  PostDetailsControllerProvider._internal(
+  CommentsControllerProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -112,11 +111,11 @@ class PostDetailsControllerProvider
     required this.id,
   }) : super.internal();
 
-  final int id;
+  final int? id;
 
   @override
-  FutureOr<PostVM> runNotifierBuild(
-    covariant PostDetailsController notifier,
+  FutureOr<List<CommentVM>> runNotifierBuild(
+    covariant CommentsController notifier,
   ) {
     return notifier.build(
       id,
@@ -124,10 +123,10 @@ class PostDetailsControllerProvider
   }
 
   @override
-  Override overrideWith(PostDetailsController Function() create) {
+  Override overrideWith(CommentsController Function() create) {
     return ProviderOverride(
       origin: this,
-      override: PostDetailsControllerProvider._internal(
+      override: CommentsControllerProvider._internal(
         () => create()..id = id,
         from: from,
         name: null,
@@ -140,14 +139,14 @@ class PostDetailsControllerProvider
   }
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<PostDetailsController, PostVM>
+  AutoDisposeAsyncNotifierProviderElement<CommentsController, List<CommentVM>>
       createElement() {
-    return _PostDetailsControllerProviderElement(this);
+    return _CommentsControllerProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is PostDetailsControllerProvider && other.id == id;
+    return other is CommentsControllerProvider && other.id == id;
   }
 
   @override
@@ -159,18 +158,19 @@ class PostDetailsControllerProvider
   }
 }
 
-mixin PostDetailsControllerRef on AutoDisposeAsyncNotifierProviderRef<PostVM> {
+mixin CommentsControllerRef
+    on AutoDisposeAsyncNotifierProviderRef<List<CommentVM>> {
   /// The parameter `id` of this provider.
-  int get id;
+  int? get id;
 }
 
-class _PostDetailsControllerProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<PostDetailsController,
-        PostVM> with PostDetailsControllerRef {
-  _PostDetailsControllerProviderElement(super.provider);
+class _CommentsControllerProviderElement
+    extends AutoDisposeAsyncNotifierProviderElement<CommentsController,
+        List<CommentVM>> with CommentsControllerRef {
+  _CommentsControllerProviderElement(super.provider);
 
   @override
-  int get id => (origin as PostDetailsControllerProvider).id;
+  int? get id => (origin as CommentsControllerProvider).id;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

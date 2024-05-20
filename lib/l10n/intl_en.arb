@@ -1,5 +1,8 @@
 {
   "allThePosts": "All the posts",
   "comments": "Comments",
-  "editPost": "Edit post"
+  "editPost": "Edit post",
+  "postDeletedSuccessfully": "Post deleted Successfully",
+  "goBack": "Back",
+  "save": "Save"
 }

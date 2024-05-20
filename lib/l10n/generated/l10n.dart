@@ -79,6 +79,36 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Post deleted Successfully`
+  String get postDeletedSuccessfully {
+    return Intl.message(
+      'Post deleted Successfully',
+      name: 'postDeletedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Back`
+  String get goBack {
+    return Intl.message(
+      'Back',
+      name: 'goBack',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save`
+  String get save {
+    return Intl.message(
+      'Save',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

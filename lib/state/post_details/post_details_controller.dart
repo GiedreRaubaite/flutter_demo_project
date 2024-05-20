@@ -8,10 +8,18 @@ part 'post_details_controller.g.dart';
 class PostDetailsController extends _$PostDetailsController {
   @override
   Future<PostVM> build(int id) async {
-    var post = await ref.read(demoApiProvider.notifier).getPost(id);
+    var post = await ref.read(demoApiProvider.notifier).getSinglePost(id);
     PostVM postDetails = PostVM(
         body: post.body, id: post.id, title: post.title, userId: post.userId);
 
     return postDetails;
+  }
+
+  Future<bool> deleteSinglePost() async {
+    return await ref.read(demoApiProvider.notifier).deleteSinglePost(id);
+  }
+
+  Future<bool> editSinglePost() async {
+    return await ref.read(demoApiProvider.notifier).deleteSinglePost(id);
   }
 }
