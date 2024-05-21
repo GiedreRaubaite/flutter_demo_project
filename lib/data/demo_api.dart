@@ -47,9 +47,14 @@ class DemoApi extends _$DemoApi {
     }
   }
 
-  Future<bool> editSinglePost(int id) async {
-    final response = await http
-        .put(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
+  Future<bool> editSinglePost(int id, PostDto post) async {
+    final response = await http.put(
+      Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'),
+      body: jsonEncode(post),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    );
     if (response.statusCode == 200) {
       return true;
     } else {

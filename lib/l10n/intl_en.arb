@@ -2,7 +2,8 @@
   "allThePosts": "All the posts",
   "comments": "Comments",
   "editPost": "Edit post",
-  "postDeletedSuccessfully": "Post deleted Successfully",
+  "postDeletedSuccessfully": "Post deleted successfully",
+  "postEditedSuccessfully": "Post edited successfully",
   "goBack": "Back",
   "save": "Save"
 }

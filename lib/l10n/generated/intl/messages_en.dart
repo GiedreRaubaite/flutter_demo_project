@@ -27,7 +27,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "editPost": MessageLookupByLibrary.simpleMessage("Edit post"),
         "goBack": MessageLookupByLibrary.simpleMessage("Back"),
         "postDeletedSuccessfully":
-            MessageLookupByLibrary.simpleMessage("Post deleted Successfully"),
+            MessageLookupByLibrary.simpleMessage("Post deleted successfully"),
+        "postEditedSuccessfully":
+            MessageLookupByLibrary.simpleMessage("Post edited successfully"),
         "save": MessageLookupByLibrary.simpleMessage("Save")
       };
 }

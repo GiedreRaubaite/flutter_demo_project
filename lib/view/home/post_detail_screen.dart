@@ -1,17 +1,18 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_demo_project/l10n/generated/l10n.dart';
 import 'package:flutter_demo_project/state/comments/comments_controller.dart';
 import 'package:flutter_demo_project/state/post_details/post_details_controller.dart';
 import 'package:flutter_demo_project/state/router/_router.dart';
 import 'package:flutter_demo_project/view/_view.dart';
+import 'package:flutter_demo_project/view/shared/_shared.dart';
+import 'package:flutter_demo_project/view/viewmodels/post_vm.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
   const PostDetailScreen({super.key, required this.post});
@@ -40,21 +41,24 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     var post = widget.post;
     final translation = L10n();
     var comments = ref.watch(commentsControllerProvider(post.id));
 
     final topContentText = Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        if (!editModus) const SizedBox(height: 10.0),
-        if (!editModus)
-          Text(
+        const SizedBox(height: 10.0),
+        Padding(
+          padding: const EdgeInsets.all(14.0),
+          child: Text(
             post.title ?? '',
-            style: const TextStyle(color: Colors.white, fontSize: 25.0),
+            style: const TextStyle(
+                color: Color.fromARGB(255, 29, 29, 29), fontSize: 25.0),
           ),
+        ),
         if (!editModus)
           const Flexible(
             child: Divider(color: Color.fromARGB(255, 224, 198, 2)),
@@ -68,9 +72,13 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                   flex: 6,
                   child: Padding(
                       padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(
-                        post.body ?? '',
-                        style: const TextStyle(color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Text(
+                          post.body ?? '',
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 54, 54, 54)),
+                        ),
                       ))),
             ),
             Visibility(
@@ -78,12 +86,13 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
               child: Flexible(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: TextFormField(
-                    maxLines: 10,
-                    onSaved: (newValue) {},
+                  child: AutoSizeTextField(
+                    maxLines: null,
                     controller: textController,
                     autofocus: true,
+                    minFontSize: 15,
                     decoration: const InputDecoration(
+                        isDense: true,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(5),
@@ -111,20 +120,13 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
         ),
         if (!editModus)
           Container(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            padding: const EdgeInsets.all(26.0),
             width: MediaQuery.of(context).size.width,
             child: ElevatedButton(
               onPressed: () async {
                 setState(() {
                   editModus = !editModus;
                 });
-                if (await ref
-                            .read(postDetailsControllerProvider
-                                .call(post.id!)
-                                .notifier)
-                            .editSinglePost() ==
-                        true &&
-                    editModus) {}
               },
               child: Text(
                 translation.editPost,
@@ -136,51 +138,74 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                child: ElevatedButton.icon(
-                  icon: const Icon(FontAwesomeIcons.arrowLeft),
-                  onPressed: () async {
-                    setState(() {
-                      editModus = !editModus;
-                    });
-                    if (await ref
-                                .read(postDetailsControllerProvider
-                                    .call(post.id!)
-                                    .notifier)
-                                .editSinglePost() ==
-                            true &&
-                        editModus) {}
-                  },
-                  label: Text(
-                    translation.goBack,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 119, 53, 53)),
-                  ),
+              ElevatedButton.icon(
+                icon: const Icon(FontAwesomeIcons.arrowLeft),
+                onPressed: () async {
+                  setState(() {
+                    editModus = !editModus;
+                  });
+                },
+                label: Text(
+                  translation.goBack,
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 119, 53, 53)),
                 ),
               ),
-              Container(
-                child: ElevatedButton.icon(
-                  icon: const Icon(
-                    FontAwesomeIcons.check,
-                    color: Colors.green,
-                  ),
-                  onPressed: () async {
-                    setState(() {
-                      editModus = !editModus;
-                    });
-                    if (await ref
-                                .read(postDetailsControllerProvider
-                                    .call(post.id!)
-                                    .notifier)
-                                .editSinglePost() ==
-                            true &&
-                        editModus) {}
-                  },
-                  label: Text(
-                    translation.save,
-                    style: const TextStyle(
-                        color: Color.fromARGB(255, 119, 53, 53)),
-                  ),
+              ElevatedButton.icon(
+                icon: const Icon(
+                  FontAwesomeIcons.check,
+                  color: Colors.green,
+                ),
+                onPressed: () async {
+                  setState(() {
+                    editModus = !editModus;
+                  });
+                  if (await ref
+                              .read(postDetailsControllerProvider
+                                  .call(post.id!)
+                                  .notifier)
+                              .editSinglePost(post) ==
+                          true &&
+                      context.mounted) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              FontAwesomeIcons.check,
+                              color: Colors.green,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Text(
+                                translation.postEditedSuccessfully,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    decoration: TextDecoration.none),
+                              ),
+                            ),
+                          ],
+                        ));
+                      },
+                    );
+                    Future.delayed(
+                      const Duration(seconds: 1),
+                      () {
+                        Navigator.pop(context);
+                        context.pushNamed(Routes.homeRouteName);
+                      },
+                    );
+                  }
+                },
+                label: Text(
+                  translation.save,
+                  style:
+                      const TextStyle(color: Color.fromARGB(255, 119, 53, 53)),
                 ),
               ),
             ],
@@ -189,9 +214,10 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
     );
 
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         extendBody: true,
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle.light,
           leading: IconButton(
             icon: const Icon(FontAwesomeIcons.arrowLeft),
             onPressed: () => Navigator.of(context).pop(),
@@ -256,128 +282,131 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
         ),
         body: comments.when(
           data: (data) {
-            return SafeArea(
-              child: SingleChildScrollView(
+            return SingleChildScrollView(
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.9,
+                width: MediaQuery.of(context).size.width,
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 137, 188, 230),
-                      ),
-                      child: Center(
-                        child: topContentText,
-                      ),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      flex: 10,
+                      child: topContentText,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Icon(
-                                  FontAwesomeIcons.thumbsUp,
-                                  color: Colors.blue,
+                    Flexible(
+                      fit: FlexFit.loose,
+                      flex: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Row(
+                              children: [
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Icon(
+                                    FontAwesomeIcons.thumbsUp,
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                              ),
-                              Icon(
-                                FontAwesomeIcons.heart,
-                                color: Colors.red,
-                              )
-                            ],
-                          ),
-                          TextButton(
-                            style: const ButtonStyle(
-                                overlayColor: MaterialStatePropertyAll(
-                                    Color.fromARGB(255, 137, 188, 230)),
-                                foregroundColor: MaterialStatePropertyAll(
-                                    Colors.transparent)),
-                            onPressed: () {
-                              showModalBottomSheet(
-                                context: context,
-                                isScrollControlled: true,
-                                isDismissible: true,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(16))),
-                                builder: (context) {
-                                  return DraggableScrollableSheet(
-                                      expand: false,
-                                      builder: (_, controller) => Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  margin: const EdgeInsets
-                                                      .symmetric(vertical: 8),
-                                                  height: 8.0,
-                                                  width: 70.0,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.grey[400],
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10.0)),
+                                Icon(
+                                  FontAwesomeIcons.heart,
+                                  color: Colors.red,
+                                )
+                              ],
+                            ),
+                            TextButton(
+                              style: const ButtonStyle(
+                                  overlayColor: WidgetStatePropertyAll(
+                                      Color.fromARGB(255, 137, 188, 230)),
+                                  foregroundColor: WidgetStatePropertyAll(
+                                      Colors.transparent)),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  isDismissible: true,
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(16))),
+                                  builder: (context) {
+                                    return DraggableScrollableSheet(
+                                        expand: false,
+                                        builder: (_, controller) => Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.topCenter,
+                                                  child: Container(
+                                                    margin: const EdgeInsets
+                                                        .symmetric(vertical: 8),
+                                                    height: 8.0,
+                                                    width: 70.0,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.grey[400],
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    10.0)),
+                                                  ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                child: ListView.builder(
-                                                    controller: controller,
-                                                    itemCount: data.length,
-                                                    itemBuilder: (_, index) {
-                                                      return Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal:
-                                                                      10),
-                                                          child: Container(
-                                                            decoration: const BoxDecoration(
-                                                                border: Border(
-                                                                    bottom: BorderSide(
-                                                                        color: Colors
-                                                                            .black))),
-                                                            child: ListTile(
-                                                              title: Text(
-                                                                data[index]
-                                                                        .email ??
-                                                                    "Unknown account",
-                                                                style: const TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
+                                                Expanded(
+                                                  child: ListView.builder(
+                                                      controller: controller,
+                                                      itemCount: data.length,
+                                                      itemBuilder: (_, index) {
+                                                        return Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal:
+                                                                        10),
+                                                            child: Container(
+                                                              decoration: const BoxDecoration(
+                                                                  border: Border(
+                                                                      bottom: BorderSide(
+                                                                          color:
+                                                                              Colors.black))),
+                                                              child: ListTile(
+                                                                title: Text(
+                                                                  data[index]
+                                                                          .email ??
+                                                                      "Unknown account",
+                                                                  style: const TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
+                                                                ),
+                                                                subtitle: Text(
+                                                                  "${data[index].body}]",
+                                                                  maxLines: 15,
+                                                                ),
                                                               ),
-                                                              subtitle: Text(
-                                                                "${data[index].body}]",
-                                                                maxLines: 15,
-                                                              ),
-                                                            ),
-                                                          ));
-                                                    }),
-                                              )
-                                            ],
-                                          ));
-                                },
-                              );
-                            },
-                            child: Text(
-                                "${translation.comments} (${data.length})",
-                                style: const TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blue)),
-                          )
-                        ],
+                                                            ));
+                                                      }),
+                                                )
+                                              ],
+                                            ));
+                                  },
+                                );
+                              },
+                              child: Text(
+                                  "${translation.comments} (${data.length})",
+                                  style: const TextStyle(
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.blue)),
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -385,26 +414,7 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
               ),
             );
           },
-          loading: () => const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 100,
-                  height: 50,
-                  child: LoadingIndicator(
-                    indicatorType: Indicator.ballBeat,
-                    colors: [
-                      Color.fromARGB(255, 192, 102, 96),
-                      Color.fromARGB(255, 224, 198, 2),
-                      Color.fromARGB(255, 137, 188, 230)
-                    ],
-                    strokeWidth: 2,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          loading: () => const LoadingWidget(),
           error: (error, stackTrace) {
             throw Error;
           },

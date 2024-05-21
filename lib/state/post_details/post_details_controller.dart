@@ -1,4 +1,5 @@
 import 'package:flutter_demo_project/data/demo_api.dart';
+import 'package:flutter_demo_project/data/dto/posts/post_dto.dart';
 import 'package:flutter_demo_project/view/_view.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -19,7 +20,9 @@ class PostDetailsController extends _$PostDetailsController {
     return await ref.read(demoApiProvider.notifier).deleteSinglePost(id);
   }
 
-  Future<bool> editSinglePost() async {
-    return await ref.read(demoApiProvider.notifier).deleteSinglePost(id);
+  Future<bool> editSinglePost(PostVM post) async {
+    var postDto = PostDto.fromVM(post);
+
+    return await ref.read(demoApiProvider.notifier).editSinglePost(id, postDto);
   }
 }

@@ -28,6 +28,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "goBack": MessageLookupByLibrary.simpleMessage("Terug"),
         "postDeletedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Post succesvol verwijderd"),
+        "postEditedSuccessfully":
+            MessageLookupByLibrary.simpleMessage("Post succescol bewerkt"),
         "save": MessageLookupByLibrary.simpleMessage("Opslaan")
       };
 }

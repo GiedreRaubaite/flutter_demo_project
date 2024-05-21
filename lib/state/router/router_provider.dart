@@ -26,6 +26,14 @@ GoRouter router(RouterRef ref) {
       builder: (context, state) =>
           PostDetailScreen(post: state.extra as PostVM),
     ),
+    GoRoute(
+      parentNavigatorKey: rootNavigatorKey,
+      name: Routes.errorPopUpRouteName,
+      path: Routes.errorPopUpRoute,
+      builder: (context, state) => const Dialog(
+        child: Text("Oops, something went wrong"),
+      ),
+    ),
   ];
 
   final router = GoRouter(

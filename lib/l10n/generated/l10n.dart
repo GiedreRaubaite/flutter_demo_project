@@ -80,11 +80,21 @@ class L10n {
     );
   }
 
-  /// `Post deleted Successfully`
+  /// `Post deleted successfully`
   String get postDeletedSuccessfully {
     return Intl.message(
-      'Post deleted Successfully',
+      'Post deleted successfully',
       name: 'postDeletedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Post edited successfully`
+  String get postEditedSuccessfully {
+    return Intl.message(
+      'Post edited successfully',
+      name: 'postEditedSuccessfully',
       desc: '',
       args: [],
     );

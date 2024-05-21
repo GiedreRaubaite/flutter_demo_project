@@ -6,7 +6,6 @@ import 'package:flutter_demo_project/state/router/_router.dart';
 import 'package:flutter_demo_project/view/shared/_shared.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:loading_indicator/loading_indicator.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +28,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final translation = L10n();
-    // final appState = ref.watch(appStateControllerProvider);
     final list = ref.watch(postsControllerProvider);
     final refreshList = ref.read(postsControllerProvider.notifier);
     return Scaffold(
         appBar: AppBar(
+          leading: null,
+          actions: [LanguageToggleWidget()],
           title: Text(translation.allThePosts),
         ),
         body: list.when(
@@ -69,26 +69,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             return ErrorWidget(stackTrace);
           },
           loading: () {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    height: 50,
-                    child: LoadingIndicator(
-                      indicatorType: Indicator.ballBeat,
-                      colors: [
-                        Color.fromARGB(255, 192, 102, 96),
-                        Color.fromARGB(255, 224, 198, 2),
-                        Color.fromARGB(255, 137, 188, 230)
-                      ],
-                      strokeWidth: 2,
-                    ),
-                  ),
-                ],
-              ),
-            );
+            return const LoadingWidget();
           },
         ));
   }
