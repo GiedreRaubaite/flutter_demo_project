@@ -14,26 +14,22 @@ GoRouter router(RouterRef ref) {
 
   List<RouteBase> routes = [
     GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      name: Routes.homeRouteName,
-      path: Routes.homeRoute,
-      builder: (context, state) => const HomeScreen(),
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      name: Routes.postDetailsRouteName,
-      path: Routes.postDetailsRoute,
-      builder: (context, state) =>
-          PostDetailScreen(post: state.extra as PostVM),
-    ),
-    GoRoute(
-      parentNavigatorKey: rootNavigatorKey,
-      name: Routes.errorPopUpRouteName,
-      path: Routes.errorPopUpRoute,
-      builder: (context, state) => const Dialog(
-        child: Text("Oops, something went wrong"),
-      ),
-    ),
+        parentNavigatorKey: rootNavigatorKey,
+        name: Routes.homeRouteName,
+        path: Routes.homeRoute,
+        builder: (context, state) => const HomeScreen(),
+        routes: [
+          GoRoute(
+            parentNavigatorKey: rootNavigatorKey,
+            name: Routes.postDetailsRouteName,
+            path: Routes.postDetailsRoute,
+            builder: (context, state) => PostDetailScreen(
+              post: state.uri.queryParameters['post'],
+              postId: state.uri.queryParameters['postId'],
+              postTitle: state.uri.queryParameters['postTitle'],
+            ),
+          ),
+        ]),
   ];
 
   final router = GoRouter(
@@ -50,7 +46,7 @@ Widget _errorRoute(BuildContext context, GoRouterState state) {
   if (state.extra == null || state.extra is! String) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Error'),
+        title: const Text('Oopss ! '),
         iconTheme: const IconThemeData(),
       ),
       body: Center(

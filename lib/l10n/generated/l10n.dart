@@ -119,6 +119,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Check your internet connection and try again`
+  String get checkYourInternetConnection {
+    return Intl.message(
+      'Check your internet connection and try again',
+      name: 'checkYourInternetConnection',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

@@ -1,6 +1,5 @@
 import 'package:flutter_demo_project/view/viewmodels/_viewmodels.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:http/http.dart';
 
 part 'post_dto.freezed.dart';
 part 'post_dto.g.dart';

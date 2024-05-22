@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_demo_project/l10n/generated/l10n.dart';
+import 'package:flutter_demo_project/state/network_connectivity/network_connectivity_controller.dart';
 import 'package:flutter_demo_project/state/post_details/post_details_controller.dart';
 import 'package:flutter_demo_project/state/posts/posts_controller.dart';
 import 'package:flutter_demo_project/state/router/_router.dart';
@@ -30,10 +31,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final translation = L10n();
     final list = ref.watch(postsControllerProvider);
     final refreshList = ref.read(postsControllerProvider.notifier);
+    final connectivity = ref.watch(networkStatusProvider);
     return Scaffold(
         appBar: AppBar(
           leading: null,
-          actions: [LanguageToggleWidget()],
+          actions: const [LanguageToggleWidget()],
           title: Text(translation.allThePosts),
         ),
         body: list.when(
@@ -55,10 +57,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         CroppedString(text: data[index].title, maxLength: 20),
                     subtitle:
                         CroppedString(text: data[index].body, maxLength: 4),
-                    onTap: () {
-                      ref.read(postDetailsControllerProvider.call(index));
-                      context.pushNamed(Routes.postDetailsRouteName,
-                          extra: data[index]);
+                    onTap: () async {
+                      if (connectivity) {
+                        ref.read(postDetailsControllerProvider.call(index));
+                        context.goNamed(Routes.postDetailsRouteName,
+                            queryParameters: {
+                              "post": data[index].body ?? "",
+                              "postId": data[index].id.toString(),
+                              "postTitle": data[index].title ?? ""
+                            });
+                      } else {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Container(
+                              color: Colors.white,
+                              child: const Padding(
+                                padding: EdgeInsets.all(20),
+                                child: Text(
+                                    'check your internet connection and try again'),
+                              ),
+                            );
+                          },
+                        );
+                      }
                     },
                   );
                 },

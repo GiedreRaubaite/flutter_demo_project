@@ -1,8 +1,9 @@
-import 'package:flutter_demo_project/data/dto/posts/post_dto.dart';
+import 'package:flutter_demo_project/state/network_connectivity/network_connectivity_controller.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '_data.dart';
 
@@ -16,14 +17,28 @@ class DemoApi extends _$DemoApi {
   }
 
   Future<List<PostDto>> fetchPosts() async {
-    final response =
-        await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
-    if (response.statusCode == 200) {
-      return (json.decode(response.body) as List)
-          .map((i) => PostDto.fromJson(i))
-          .toList();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final connectivity = ref.watch(networkStatusProvider);
+    if (connectivity) {
+      final response = await http
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
+      if (response.statusCode == 200) {
+        await prefs.setString('posts', response.body);
+        return (json.decode(response.body) as List)
+            .map((i) => PostDto.fromJson(i))
+            .toList();
+      } else {
+        throw Exception('Failed to load posts');
+      }
     } else {
-      throw Exception('Failed to load posts');
+      String? offlineList = prefs.getString('posts');
+      if (offlineList != null) {
+        return (json.decode(offlineList) as List)
+            .map((i) => PostDto.fromJson(i))
+            .toList();
+      } else {
+        return [];
+      }
     }
   }
 

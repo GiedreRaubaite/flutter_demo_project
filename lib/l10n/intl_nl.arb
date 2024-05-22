@@ -5,5 +5,6 @@
   "postDeletedSuccessfully": "Post succesvol verwijderd",
   "postEditedSuccessfully": "Post succescol bewerkt",
   "goBack": "Terug",
-  "save": "Opslaan"
+  "save": "Opslaan",
+  "checkYourInternetConnection": "Controleer uw internet verbinding en probeer terug"
 }

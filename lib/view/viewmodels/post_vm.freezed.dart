@@ -14,6 +14,10 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+PostVM _$PostVMFromJson(Map<String, dynamic> json) {
+  return _PostVM.fromJson(json);
+}
+
 /// @nodoc
 mixin _$PostVM {
   int? get userId => throw _privateConstructorUsedError;
@@ -21,6 +25,7 @@ mixin _$PostVM {
   String? get title => throw _privateConstructorUsedError;
   String? get body => throw _privateConstructorUsedError;
 
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $PostVMCopyWith<PostVM> get copyWith => throw _privateConstructorUsedError;
 }
@@ -120,9 +125,12 @@ class __$$PostVMImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
+@JsonSerializable()
 class _$PostVMImpl implements _PostVM {
   const _$PostVMImpl({this.userId, this.id, this.title, this.body});
+
+  factory _$PostVMImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PostVMImplFromJson(json);
 
   @override
   final int? userId;
@@ -149,6 +157,7 @@ class _$PostVMImpl implements _PostVM {
             (identical(other.body, body) || other.body == body));
   }
 
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, userId, id, title, body);
 
@@ -157,6 +166,13 @@ class _$PostVMImpl implements _PostVM {
   @pragma('vm:prefer-inline')
   _$$PostVMImplCopyWith<_$PostVMImpl> get copyWith =>
       __$$PostVMImplCopyWithImpl<_$PostVMImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PostVMImplToJson(
+      this,
+    );
+  }
 }
 
 abstract class _PostVM implements PostVM {
@@ -165,6 +181,8 @@ abstract class _PostVM implements PostVM {
       final int? id,
       final String? title,
       final String? body}) = _$PostVMImpl;
+
+  factory _PostVM.fromJson(Map<String, dynamic> json) = _$PostVMImpl.fromJson;
 
   @override
   int? get userId;

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:auto_size_text_field/auto_size_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,9 +13,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
 class PostDetailScreen extends ConsumerStatefulWidget {
-  const PostDetailScreen({super.key, required this.post});
+  const PostDetailScreen(
+      {super.key,
+      required this.post,
+      required this.postId,
+      required this.postTitle});
 
-  final PostVM post;
+  final String? post;
+  final String? postTitle;
+  final String? postId;
 
   @override
   ConsumerState<PostDetailScreen> createState() => _PostDetailScreen();
@@ -26,11 +30,17 @@ class PostDetailScreen extends ConsumerStatefulWidget {
 class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
   late TextEditingController textController;
   late bool editModus;
+  late String? post;
+  late String? postTitle;
+  late int? postId;
 
   @override
   void initState() {
+    post = widget.post;
+    postTitle = widget.postTitle;
+    postId = widget.postId != null ? int.tryParse(widget.postId!) : null;
     editModus = false;
-    textController = TextEditingController(text: widget.post.body);
+    textController = TextEditingController(text: widget.post);
     super.initState();
   }
 
@@ -42,9 +52,8 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var post = widget.post;
     final translation = L10n();
-    var comments = ref.watch(commentsControllerProvider(post.id));
+    var comments = ref.watch(commentsControllerProvider(postId));
 
     final topContentText = Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -54,7 +63,7 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
         Padding(
           padding: const EdgeInsets.all(14.0),
           child: Text(
-            post.title ?? '',
+            postTitle ?? '',
             style: const TextStyle(
                 color: Color.fromARGB(255, 29, 29, 29), fontSize: 25.0),
           ),
@@ -75,7 +84,7 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(14),
                         child: Text(
-                          post.body ?? '',
+                          post ?? '',
                           style: const TextStyle(
                               color: Color.fromARGB(255, 54, 54, 54)),
                         ),
@@ -160,46 +169,53 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                   setState(() {
                     editModus = !editModus;
                   });
-                  if (await ref
-                              .read(postDetailsControllerProvider
-                                  .call(post.id!)
-                                  .notifier)
-                              .editSinglePost(post) ==
-                          true &&
-                      context.mounted) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return Center(
-                            child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              FontAwesomeIcons.check,
-                              color: Colors.green,
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8.0),
-                              child: Text(
-                                translation.postEditedSuccessfully,
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    decoration: TextDecoration.none),
+                  if (postId != null) {
+                    if (await ref
+                                .read(postDetailsControllerProvider
+                                    .call(postId!)
+                                    .notifier)
+                                .editSinglePost(PostVM(
+                                    id: postId,
+                                    title: postTitle,
+                                    body: post)) ==
+                            true &&
+                        context.mounted) {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.check,
+                                color: Colors.green,
                               ),
-                            ),
-                          ],
-                        ));
-                      },
-                    );
-                    Future.delayed(
-                      const Duration(seconds: 1),
-                      () {
-                        Navigator.pop(context);
-                        context.pushNamed(Routes.homeRouteName);
-                      },
-                    );
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  translation.postEditedSuccessfully,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ],
+                          ));
+                        },
+                      );
+                      Future.delayed(
+                        const Duration(seconds: 1),
+                        () async {
+                          Navigator.pop(context);
+                          context.pop();
+
+                          context.goNamed(Routes.homeRouteName);
+                        },
+                      );
+                    }
                   }
                 },
                 label: Text(
@@ -227,10 +243,10 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: IconButton(
                 onPressed: () async {
-                  if (post.id != null) {
+                  if (postId != null) {
                     if (await ref
                                 .read(postDetailsControllerProvider
-                                    .call(post.id!)
+                                    .call(postId!)
                                     .notifier)
                                 .deleteSinglePost() ==
                             true &&
@@ -265,12 +281,10 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                         const Duration(seconds: 1),
                         () {
                           Navigator.pop(context);
-                          context.pushNamed(Routes.homeRouteName);
+                          context.goNamed(Routes.homeRouteName);
                         },
                       );
                     }
-                  } else {
-                    null;
                   }
                 },
                 icon: const Icon(

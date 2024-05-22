@@ -5,5 +5,6 @@
   "postDeletedSuccessfully": "Post deleted successfully",
   "postEditedSuccessfully": "Post edited successfully",
   "goBack": "Back",
-  "save": "Save"
+  "save": "Save",
+  "checkYourInternetConnection": "Check your internet connection and try again"
 }
