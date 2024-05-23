@@ -4,6 +4,7 @@ import 'package:flutter_demo_project/state/network_connectivity/network_connecti
 import 'package:flutter_demo_project/state/post_details/post_details_controller.dart';
 import 'package:flutter_demo_project/state/posts/posts_controller.dart';
 import 'package:flutter_demo_project/state/router/_router.dart';
+import 'package:flutter_demo_project/view/_view.dart';
 import 'package:flutter_demo_project/view/shared/_shared.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -16,9 +17,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  var listItems;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
+    listItems = <PostVM>[];
   }
 
   @override
@@ -28,7 +33,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final translation = L10n();
+    final translation = L10n.of(context);
     final list = ref.watch(postsControllerProvider);
     final refreshList = ref.read(postsControllerProvider.notifier);
     final connectivity = ref.watch(networkStatusProvider);
@@ -40,52 +45,83 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         body: list.when(
           data: (data) {
-            return RefreshIndicator(
-              color: const Color.fromARGB(255, 137, 188, 230),
-              onRefresh: () async {
-                await refreshList.refresh();
-              },
-              child: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: const Color.fromARGB(255, 137, 188, 230),
-                      child: Text('${index + 1}'),
-                    ),
-                    title:
-                        CroppedString(text: data[index].title, maxLength: 20),
-                    subtitle:
-                        CroppedString(text: data[index].body, maxLength: 4),
-                    onTap: () async {
-                      if (connectivity) {
-                        ref.read(postDetailsControllerProvider.call(index));
-                        context.goNamed(Routes.postDetailsRouteName,
-                            queryParameters: {
-                              "post": data[index].body ?? "",
-                              "postId": data[index].id.toString(),
-                              "postTitle": data[index].title ?? ""
-                            });
-                      } else {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Container(
-                              color: Colors.white,
-                              child: const Padding(
-                                padding: EdgeInsets.all(20),
-                                child: Text(
-                                    'check your internet connection and try again'),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                    },
-                  );
+            if (data.isNotEmpty) {
+              var future = Future(() {});
+              for (var i = 0; i < data.length; i++) {
+                future = future.then((_) {
+                  return Future.delayed(const Duration(milliseconds: 100), () {
+                    listItems.add(data[i]);
+                    if (_listKey.currentState != null) {
+                      _listKey.currentState!.insertItem(i);
+                    }
+                  });
+                });
+              }
+              return RefreshIndicator(
+                color: const Color.fromARGB(255, 137, 188, 230),
+                onRefresh: () async {
+                  await refreshList.refresh();
                 },
-              ),
-            );
+                child: AnimatedList(
+                  key: _listKey,
+                  initialItemCount: listItems.length,
+                  itemBuilder: (BuildContext context, int index,
+                      Animation<double> animation) {
+                    return SlideTransition(
+                      position: CurvedAnimation(
+                        curve: Curves.easeOut,
+                        parent: animation,
+                      ).drive((Tween<Offset>(
+                        begin: const Offset(1, 0),
+                        end: const Offset(0, 0),
+                      ))),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor:
+                              const Color.fromARGB(255, 137, 188, 230),
+                          child: Text('${index + 1}'),
+                        ),
+                        title: CroppedString(
+                            text: listItems[index].title, maxLength: 20),
+                        subtitle: CroppedString(
+                            text: listItems[index].body, maxLength: 4),
+                        onTap: () async {
+                          if (connectivity) {
+                            ref.read(postDetailsControllerProvider.call(index));
+                            context.goNamed(Routes.postDetailsRouteName,
+                                queryParameters: {
+                                  "post": data[index].body ?? "",
+                                  "postId": data[index].id.toString(),
+                                  "postTitle": data[index].title ?? ""
+                                });
+                          } else {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Container(
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Text(translation
+                                        .checkYourInternetConnection),
+                                  ),
+                                );
+                              },
+                            );
+                          }
+                        },
+                      ),
+                    );
+                  },
+                ),
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Center(
+                  child: Text(translation.noPostWereFound),
+                ),
+              );
+            }
           },
           error: (error, stackTrace) {
             return ErrorWidget(stackTrace);

@@ -19,7 +19,7 @@ class DemoApi extends _$DemoApi {
   Future<List<PostDto>> fetchPosts() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final connectivity = ref.watch(networkStatusProvider);
-    if (connectivity) {
+    try {
       final response = await http
           .get(Uri.parse('https://jsonplaceholder.typicode.com/posts'));
       if (response.statusCode == 200) {
@@ -30,62 +30,82 @@ class DemoApi extends _$DemoApi {
       } else {
         throw Exception('Failed to load posts');
       }
-    } else {
-      String? offlineList = prefs.getString('posts');
-      if (offlineList != null) {
-        return (json.decode(offlineList) as List)
-            .map((i) => PostDto.fromJson(i))
-            .toList();
+    } catch (e) {
+      if (!connectivity) {
+        String? offlineList = prefs.getString('posts');
+        if (offlineList != null) {
+          return (json.decode(offlineList) as List)
+              .map((i) => PostDto.fromJson(i))
+              .toList();
+        } else {
+          return [];
+        }
       } else {
-        return [];
+        throw Exception("Oops... Something went wrong");
       }
     }
   }
 
   Future<PostDto> getSinglePost(int id) async {
-    final response = await http
-        .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
-    if (response.statusCode == 200) {
-      return PostDto.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Failed to load posts');
+    try {
+      final response = await http
+          .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
+      if (response.statusCode == 200) {
+        return PostDto.fromJson(json.decode(response.body));
+      } else {
+        throw Exception('Failed to load posts');
+      }
+    } catch (e) {
+      throw Exception("Oops... Something went wrong");
     }
   }
 
   Future<bool> deleteSinglePost(int id) async {
-    final response = await http
-        .delete(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
+    try {
+      final response = await http
+          .delete(Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw Error(); // throw Error ("Oops... Something went wrong");
     }
   }
 
   Future<bool> editSinglePost(int id, PostDto post) async {
-    final response = await http.put(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'),
-      body: jsonEncode(post),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    );
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      return false;
+    try {
+      final response = await http.put(
+        Uri.parse('https://jsonplaceholder.typicode.com/posts/$id'),
+        body: jsonEncode(post),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      );
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      throw Exception("Oops... Something went wrong when editing post");
     }
   }
 
   Future<List<CommentDto>> fetchComments(int id) async {
-    final response = await http.get(
-        Uri.parse('https://jsonplaceholder.typicode.com/posts/$id/comments'));
-    if (response.statusCode == 200) {
-      return (json.decode(response.body) as List)
-          .map((i) => CommentDto.fromJson(i))
-          .toList();
-    } else {
-      throw Exception('Failed to load comments');
+    try {
+      final response = await http.get(
+          Uri.parse('https://jsonplaceholder.typicode.com/posts/$id/comments'));
+      if (response.statusCode == 200) {
+        return (json.decode(response.body) as List)
+            .map((i) => CommentDto.fromJson(i))
+            .toList();
+      } else {
+        throw Exception('Failed to load comments');
+      }
+    } catch (e) {
+      throw Exception("Oops... Something went wrong when fetching comments");
     }
   }
 }

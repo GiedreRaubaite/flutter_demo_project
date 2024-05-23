@@ -129,6 +129,26 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Hmmm.. It looks like no posts were found...`
+  String get noPostWereFound {
+    return Intl.message(
+      'Hmmm.. It looks like no posts were found...',
+      name: 'noPostWereFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We are very sorry, but something went wrong...`
+  String get sorrySomethingWentWrong {
+    return Intl.message(
+      'We are very sorry, but something went wrong...',
+      name: 'sorrySomethingWentWrong',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

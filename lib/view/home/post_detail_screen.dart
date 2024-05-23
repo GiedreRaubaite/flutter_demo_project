@@ -215,6 +215,33 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                           context.goNamed(Routes.homeRouteName);
                         },
                       );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.exclamation,
+                                color: Color.fromARGB(255, 148, 32, 32),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  translation.sorrySomethingWentWrong,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ],
+                          ));
+                        },
+                      );
                     }
                   }
                 },
@@ -282,6 +309,33 @@ class _PostDetailScreen extends ConsumerState<PostDetailScreen> {
                         () {
                           Navigator.pop(context);
                           context.goNamed(Routes.homeRouteName);
+                        },
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                FontAwesomeIcons.exclamation,
+                                color: Color.fromARGB(255, 148, 32, 32),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: Text(
+                                  translation.sorrySomethingWentWrong,
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                      decoration: TextDecoration.none),
+                                ),
+                              ),
+                            ],
+                          ));
                         },
                       );
                     }

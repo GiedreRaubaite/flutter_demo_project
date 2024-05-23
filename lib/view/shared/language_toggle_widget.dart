@@ -31,38 +31,46 @@ class _LanguageToggleWidget extends ConsumerState<LanguageToggleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 26),
-      child: SizedBox(
-        width: 40,
-        height: 40,
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton(
-            value: chosenLanguage,
-            onChanged: (value) async {
-              if (value != null) {
-                setState(() {
-                  chosenLanguage = value;
-                });
-                ref.read(languageControllerProvider.notifier).setLocale(value);
-              }
-            },
-            dropdownColor: const Color.fromARGB(255, 255, 255, 255),
-            icon: const Icon(
-              FontAwesomeIcons.angleDown,
-              color: Color.fromARGB(255, 88, 88, 88),
-              size: 16,
-            ),
-            items: languages.map(
-              (e) {
-                return DropdownMenuItem(
-                  value: e,
-                  child: Text(e.toUpperCase()),
-                );
+    return Flexible(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5),
+        child: SizedBox(
+          width: 50,
+          height: 20,
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton(
+              key: const ValueKey('dropdown'),
+              value: chosenLanguage,
+              onChanged: (value) async {
+                if (value != null) {
+                  setState(() {
+                    chosenLanguage = value;
+                  });
+                  ref
+                      .read(languageControllerProvider.notifier)
+                      .setLocale(value);
+                }
               },
-            ).toList(),
-            hint: DropdownMenuItem(
-              child: Text(languages[0]),
+              dropdownColor: const Color.fromARGB(255, 255, 255, 255),
+              icon: const Icon(
+                FontAwesomeIcons.angleDown,
+                color: Color.fromARGB(255, 88, 88, 88),
+                size: 16,
+              ),
+              items: languages.map(
+                (e) {
+                  return DropdownMenuItem(
+                    key: ValueKey(e),
+                    value: e,
+                    child: Text(e.toUpperCase()),
+                  );
+                },
+              ).toList(),
+              hint: DropdownMenuItem(
+                key: ValueKey("hint$chosenLanguage"),
+                value: chosenLanguage,
+                child: Text(chosenLanguage ?? 'en'),
+              ),
             ),
           ),
         ),

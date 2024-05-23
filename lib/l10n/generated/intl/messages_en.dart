@@ -28,10 +28,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "comments": MessageLookupByLibrary.simpleMessage("Comments"),
         "editPost": MessageLookupByLibrary.simpleMessage("Edit post"),
         "goBack": MessageLookupByLibrary.simpleMessage("Back"),
+        "noPostWereFound": MessageLookupByLibrary.simpleMessage(
+            "Hmmm.. It looks like no posts were found..."),
         "postDeletedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Post deleted successfully"),
         "postEditedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Post edited successfully"),
-        "save": MessageLookupByLibrary.simpleMessage("Save")
+        "save": MessageLookupByLibrary.simpleMessage("Save"),
+        "sorrySomethingWentWrong": MessageLookupByLibrary.simpleMessage(
+            "We are very sorry, but something went wrong...")
       };
 }

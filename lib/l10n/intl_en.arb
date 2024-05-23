@@ -6,5 +6,7 @@
   "postEditedSuccessfully": "Post edited successfully",
   "goBack": "Back",
   "save": "Save",
-  "checkYourInternetConnection": "Check your internet connection and try again"
+  "checkYourInternetConnection": "Check your internet connection and try again",
+  "noPostWereFound": "Hmmm.. It looks like no posts were found...",
+  "sorrySomethingWentWrong": "We are very sorry, but something went wrong..."
 }

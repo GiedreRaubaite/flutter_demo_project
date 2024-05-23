@@ -28,10 +28,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "comments": MessageLookupByLibrary.simpleMessage("Commentaren"),
         "editPost": MessageLookupByLibrary.simpleMessage("Post bewerken"),
         "goBack": MessageLookupByLibrary.simpleMessage("Terug"),
+        "noPostWereFound": MessageLookupByLibrary.simpleMessage(
+            "Hmmm.. Het lijkt dat er geen posts gevonden zijn..."),
         "postDeletedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Post succesvol verwijderd"),
         "postEditedSuccessfully":
             MessageLookupByLibrary.simpleMessage("Post succescol bewerkt"),
-        "save": MessageLookupByLibrary.simpleMessage("Opslaan")
+        "save": MessageLookupByLibrary.simpleMessage("Opslaan"),
+        "sorrySomethingWentWrong": MessageLookupByLibrary.simpleMessage(
+            "Onze excuses, er is iets misgegaan...")
       };
 }
