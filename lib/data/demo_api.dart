@@ -70,7 +70,7 @@ class DemoApi extends _$DemoApi {
         return false;
       }
     } catch (e) {
-      throw Error(); // throw Error ("Oops... Something went wrong");
+      return false;
     }
   }
 
@@ -89,7 +89,7 @@ class DemoApi extends _$DemoApi {
         return false;
       }
     } catch (e) {
-      throw Exception("Oops... Something went wrong when editing post");
+      return false;
     }
   }
 

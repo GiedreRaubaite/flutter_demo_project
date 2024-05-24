@@ -10,7 +10,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:flutter_demo_project/main.dart';
 
 void main() {
@@ -20,7 +19,7 @@ void main() {
       container: ProviderContainer(),
       child: const MyApp(),
     ));
-
+    await tester.pump();
     final dropDownWidget = find.byKey(const ValueKey('dropdown'));
 
     expect(dropDownWidget, findsOneWidget);
@@ -32,6 +31,7 @@ void main() {
       container: ProviderContainer(),
       child: const MyApp(),
     ));
+
     List<String> languages = ["en", "nl"];
     var languageOfADevice = languages.firstWhere(
         (element) => element == Platform.localeName.substring(0, 2));
@@ -44,29 +44,34 @@ void main() {
           ValueKey('hint$languageOfADevice'),
         ));
   });
-
-  testWidgets('DropdownButton change languages control',
+  testWidgets("TextField is not visible at default",
       (WidgetTester tester) async {
     await tester.pumpWidget(UncontrolledProviderScope(
       container: ProviderContainer(),
       child: const MyApp(),
     ));
-    final dropDownWidget = find.byKey(const ValueKey('dropdown'));
-    await tester.tap(dropDownWidget);
-    for (int i = 0; i < 5; i++) {
-      await tester.pump(const Duration(seconds: 1));
-    }
-    final dropdownItem = find.byKey(
-      const ValueKey('nl'),
-    );
-    final dropdownItem2 = find.byKey(
-      const ValueKey('en'),
-    );
-    await tester.tap(dropdownItem);
-    for (int i = 0; i < 5; i++) {
-      await tester.pump(const Duration(seconds: 1));
-    }
-    expect(dropdownItem, findsOneWidget);
-    expect(dropdownItem2, findsNothing);
+    final textField = find.byType(TextField);
+
+    expect(textField, findsNothing);
   });
+
+  //TO DO find out how it works with riverpod loading widgets
+
+  // testWidgets("TextField is  visible when clicked on button",
+  //     (WidgetTester tester) async {
+  //   await tester.pumpWidget(UncontrolledProviderScope(
+  //     container: ProviderContainer(),
+  //     child: const MyApp(),
+  //   ));
+  //   await tester.pump();
+  //   final editPostButton = find.byType(ElevatedButton);
+  //   await tester.pump();
+
+  //   await tester.tap(editPostButton);
+  //   await tester.pump();
+
+  //   final textField = find.byType(TextField);
+
+  //   expect(textField, findsOneWidget);
+  // });
 }

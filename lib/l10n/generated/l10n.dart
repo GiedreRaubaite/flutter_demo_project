@@ -149,6 +149,16 @@ class L10n {
       args: [],
     );
   }
+
+  /// `Unknown account`
+  String get unknownAccount {
+    return Intl.message(
+      'Unknown account',
+      name: 'unknownAccount',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {

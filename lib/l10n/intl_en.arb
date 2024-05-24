@@ -8,5 +8,6 @@
   "save": "Save",
   "checkYourInternetConnection": "Check your internet connection and try again",
   "noPostWereFound": "Hmmm.. It looks like no posts were found...",
-  "sorrySomethingWentWrong": "We are very sorry, but something went wrong..."
+  "sorrySomethingWentWrong": "We are very sorry, but something went wrong...",
+  "unknownAccount": "Unknown account"
 }

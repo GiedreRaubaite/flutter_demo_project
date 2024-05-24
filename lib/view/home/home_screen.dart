@@ -10,20 +10,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({
+    super.key,
+  });
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  var listItems;
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  late List<PostVM> listItems;
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey(debugLabel: 'list');
 
   @override
   void initState() {
+    listItems = [];
     super.initState();
-    listItems = <PostVM>[];
   }
 
   @override
@@ -62,57 +64,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onRefresh: () async {
                   await refreshList.refresh();
                 },
-                child: AnimatedList(
-                  key: _listKey,
-                  initialItemCount: listItems.length,
-                  itemBuilder: (BuildContext context, int index,
-                      Animation<double> animation) {
-                    return SlideTransition(
-                      position: CurvedAnimation(
-                        curve: Curves.easeOut,
-                        parent: animation,
-                      ).drive((Tween<Offset>(
-                        begin: const Offset(1, 0),
-                        end: const Offset(0, 0),
-                      ))),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor:
-                              const Color.fromARGB(255, 137, 188, 230),
-                          child: Text('${index + 1}'),
+                child: Container(
+                  key: const ValueKey("list"),
+                  child: AnimatedList(
+                    key: _listKey,
+                    initialItemCount: listItems.length,
+                    itemBuilder: (BuildContext context, int index,
+                        Animation<double> animation) {
+                      return SlideTransition(
+                        position: CurvedAnimation(
+                          curve: Curves.easeOut,
+                          parent: animation,
+                        ).drive((Tween<Offset>(
+                          begin: const Offset(1, 0),
+                          end: const Offset(0, 0),
+                        ))),
+                        child: ListTile(
+                          key: const Key("listTile"),
+                          leading: CircleAvatar(
+                            backgroundColor:
+                                const Color.fromARGB(255, 137, 188, 230),
+                            child: Text('${index + 1}'),
+                          ),
+                          title: CroppedString(
+                              text: listItems[index].title, maxLength: 20),
+                          subtitle: CroppedString(
+                              text: listItems[index].body, maxLength: 35),
+                          onTap: () async {
+                            if (connectivity) {
+                              ref.read(
+                                  postDetailsControllerProvider.call(index));
+                              context.goNamed(Routes.postDetailsRouteName,
+                                  queryParameters: {
+                                    "post": data[index].body ?? "",
+                                    "postId": data[index].id.toString(),
+                                    "postTitle": data[index].title ?? ""
+                                  });
+                            } else {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20),
+                                      child: Text(translation
+                                          .checkYourInternetConnection),
+                                    ),
+                                  );
+                                },
+                              );
+                            }
+                          },
                         ),
-                        title: CroppedString(
-                            text: listItems[index].title, maxLength: 20),
-                        subtitle: CroppedString(
-                            text: listItems[index].body, maxLength: 4),
-                        onTap: () async {
-                          if (connectivity) {
-                            ref.read(postDetailsControllerProvider.call(index));
-                            context.goNamed(Routes.postDetailsRouteName,
-                                queryParameters: {
-                                  "post": data[index].body ?? "",
-                                  "postId": data[index].id.toString(),
-                                  "postTitle": data[index].title ?? ""
-                                });
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(20),
-                                    child: Text(translation
-                                        .checkYourInternetConnection),
-                                  ),
-                                );
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               );
             } else {

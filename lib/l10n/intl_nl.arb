@@ -8,5 +8,6 @@
   "save": "Opslaan",
   "checkYourInternetConnection": "Controleer uw internet verbinding en probeer terug",
   "noPostWereFound": "Hmmm.. Het lijkt dat er geen posts gevonden zijn...",
-  "sorrySomethingWentWrong": "Onze excuses, er is iets misgegaan..."
+  "sorrySomethingWentWrong": "Onze excuses, er is iets misgegaan...",
+  "unknownAccount": "Onbekende gebruiker"
 }

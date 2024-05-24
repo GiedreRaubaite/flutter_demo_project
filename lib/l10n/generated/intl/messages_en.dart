@@ -36,6 +36,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Post edited successfully"),
         "save": MessageLookupByLibrary.simpleMessage("Save"),
         "sorrySomethingWentWrong": MessageLookupByLibrary.simpleMessage(
-            "We are very sorry, but something went wrong...")
+            "We are very sorry, but something went wrong..."),
+        "unknownAccount":
+            MessageLookupByLibrary.simpleMessage("Unknown account")
       };
 }

@@ -36,6 +36,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Post succescol bewerkt"),
         "save": MessageLookupByLibrary.simpleMessage("Opslaan"),
         "sorrySomethingWentWrong": MessageLookupByLibrary.simpleMessage(
-            "Onze excuses, er is iets misgegaan...")
+            "Onze excuses, er is iets misgegaan..."),
+        "unknownAccount":
+            MessageLookupByLibrary.simpleMessage("Onbekende gebruiker")
       };
 }
