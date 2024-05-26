@@ -20,16 +20,20 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   late List<PostVM> listItems;
+  late ScrollController scrollController;
   final GlobalKey<AnimatedListState> _listKey = GlobalKey(debugLabel: 'list');
 
   @override
   void initState() {
     listItems = [];
+    scrollController = ScrollController();
     super.initState();
   }
 
   @override
   void dispose() {
+    scrollController.dispose();
+    _listKey.currentState?.deactivate();
     super.dispose();
   }
 
@@ -40,6 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final refreshList = ref.read(postsControllerProvider.notifier);
     final connectivity = ref.watch(networkStatusProvider);
     return Scaffold(
+        key: const ValueKey('home_screen'),
         appBar: AppBar(
           leading: null,
           actions: const [LanguageToggleWidget()],
@@ -67,6 +72,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Container(
                   key: const ValueKey("list"),
                   child: AnimatedList(
+                    controller: scrollController,
                     key: _listKey,
                     initialItemCount: listItems.length,
                     itemBuilder: (BuildContext context, int index,
@@ -80,7 +86,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           end: const Offset(0, 0),
                         ))),
                         child: ListTile(
-                          key: const Key("listTile"),
+                          key: Key("listTile$index"),
                           leading: CircleAvatar(
                             backgroundColor:
                                 const Color.fromARGB(255, 137, 188, 230),
@@ -123,10 +129,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               );
             } else {
-              return SingleChildScrollView(
-                child: Center(
-                  child: Text(translation.noPostWereFound),
-                ),
+              return Center(
+                child: Text(translation.noPostWereFound),
               );
             }
           },

@@ -8,11 +8,54 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_demo_project/state/posts/posts_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_demo_project/main.dart';
 
+import 'post_controller_test.dart';
+
 void main() {
+  testWidgets('There is a list visible in a home page',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+          overrides: [postsControllerProvider.overrideWith(() => MyNotifier())],
+          child: const MyApp()),
+    );
+
+    await tester.pump();
+    final scaffold = find.byKey(const ValueKey('home_screen'));
+    expect(scaffold, findsOneWidget);
+    final list = find.byType(
+      AnimatedList,
+    );
+
+    expect(list, findsOneWidget);
+    await tester.pumpAndSettle();
+
+    await tester.pumpWidget(Container());
+  });
+
+  testWidgets('list is scrollable', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      ProviderScope(
+          overrides: [postsControllerProvider.overrideWith(() => MyNotifier())],
+          child: const MyApp()),
+    );
+
+    await tester.pump();
+
+    final scaffold = find.byKey(const ValueKey('home_screen'));
+    expect(scaffold, findsOneWidget);
+
+    find.byType(
+      AnimatedList,
+    );
+
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const Key('listTile29')), 500.0);
+  });
   testWidgets('There is a dropdown in a home page',
       (WidgetTester tester) async {
     await tester.pumpWidget(UncontrolledProviderScope(
@@ -44,34 +87,4 @@ void main() {
           ValueKey('hint$languageOfADevice'),
         ));
   });
-  testWidgets("TextField is not visible at default",
-      (WidgetTester tester) async {
-    await tester.pumpWidget(UncontrolledProviderScope(
-      container: ProviderContainer(),
-      child: const MyApp(),
-    ));
-    final textField = find.byType(TextField);
-
-    expect(textField, findsNothing);
-  });
-
-  //TO DO find out how it works with riverpod loading widgets
-
-  // testWidgets("TextField is  visible when clicked on button",
-  //     (WidgetTester tester) async {
-  //   await tester.pumpWidget(UncontrolledProviderScope(
-  //     container: ProviderContainer(),
-  //     child: const MyApp(),
-  //   ));
-  //   await tester.pump();
-  //   final editPostButton = find.byType(ElevatedButton);
-  //   await tester.pump();
-
-  //   await tester.tap(editPostButton);
-  //   await tester.pump();
-
-  //   final textField = find.byType(TextField);
-
-  //   expect(textField, findsOneWidget);
-  // });
 }

@@ -24,9 +24,9 @@ dependencies:
   json_annotation: ^4.8.0
   json_serializable: ^6.6.0
   loading_indicator: ^3.1.1
-  auto_size_text_field: ^2.2.3
   connectivity_plus: ^6.0.3
   shared_preferences: ^2.2.3
+  mocktail: ^1.0.3
 
 dev_dependencies:
   flutter_test:
