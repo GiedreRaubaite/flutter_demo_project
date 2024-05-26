@@ -1,6 +1,6 @@
 > ## Flutter App Demo Project ReadMe
 >
-> Flutter App Demo Project is a simple blog project :smiley:
+> Flutter App Demo Project is a simple blog project.
 > The app has basic home_screen and post_details screens.
 > It supports multiple languages and in-app language change.
 >
@@ -24,9 +24,7 @@
 >
 > - Feature 4: Offline functionality using SharedPreferences
 >
-> - Feature 5: Navigation betweek home_screen and post_details_screen
->
-> - Feature 6: Navigation betweek home_screen and post_details_screen
+> - Feature 5: Navigation between home_screen and post_details_screen
 >
 > ### Build and Run
 >
@@ -48,4 +46,4 @@
 >
 > 2.  Post controller test - test return value of a controller
 >
-> ## Have Thank you for your time reading my code :smiley: !
+> ### Thank you for your time reading my code :smiley: !
